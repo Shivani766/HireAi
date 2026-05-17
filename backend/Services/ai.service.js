@@ -3,12 +3,27 @@ dotenv.config();
 
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || process.env.OPENAI_ADMIN_KEY;
+const baseURL = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
+
+let client;
+if (apiKey) {
+  client = new OpenAI({
+    apiKey,
+    baseURL,
+  });
+} else {
+  console.warn(
+    "Missing OpenAI/OpenRouter API key. Set OPENROUTER_API_KEY or OPENAI_API_KEY in backend/.env."
+  );
+}
 
 export const generateAIResponse = async (message) => {
+  if (!client) {
+    console.log("AI client is not configured because the API key is missing.");
+    return "AI is not available right now. Please try again later.";
+  }
+
   try {
     const completion = await client.chat.completions.create({
       model: "openrouter/auto",

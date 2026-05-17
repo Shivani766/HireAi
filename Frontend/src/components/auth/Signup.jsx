@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 
-const USER_API_END_POINT = import.meta.env.VITE_USER_API_END_POINT;
 const Signup = () => {
   const [input, setInput] = useState({
     fullname: "",
@@ -21,6 +20,8 @@ const Signup = () => {
     role: "",
     file: "",
   });
+  const USER_API_END_POINT = import.meta.env.VITE_USER_API_END_POINT;
+
   const { loading, user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
